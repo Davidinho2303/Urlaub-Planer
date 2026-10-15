@@ -98,6 +98,23 @@ input[type=range]{width:180px;accent-color:var(--accent)}
 #map{height:430px;border-radius:12px;border:1px solid var(--line);background:var(--soft);position:relative}
 .mapnote{font-size:12.5px;color:var(--muted);margin:6px 2px 0}
 @media (max-width:760px){#map{height:340px}}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,420px);gap:18px;align-items:start}
+.col-list{display:grid;gap:10px;min-width:0}
+.col-map{position:sticky;top:max(12px,env(safe-area-inset-top,0px))}
+#map{height:min(78vh,640px)}
+.card{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) 140px;transition:border-color .15s,box-shadow .15s}
+.card.hover{border-color:var(--fg)}
+.card.active{border-color:var(--fg);box-shadow:0 0 0 2px var(--fg)}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mini{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--fg);font:500 12.5px var(--body);padding:4px 9px;border-radius:999px;cursor:pointer}
+.mini.fav[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.fsel{width:100%;font-size:13px;padding:6px 8px}
+.leaflet-tooltip.act{outline:2px solid var(--fg)}
+.leaflet-interactive{cursor:pointer}
+@media (max-width:1000px){.split{grid-template-columns:1fr}.col-map{position:static;order:-1}#map{height:360px}}
+@media (max-width:760px){.card{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -117,7 +134,7 @@ input[type=range]{width:180px;accent-color:var(--accent)}
     </div>
     <div class="group"><span class="label">Orte</span><div class="seg" id="f-towns"></div></div>
     <div class="row">
-      <div class="group"><span class="label">Flüge je Wohnung</span><div class="seg" id="f-one"></div></div>
+      <div class="group"><span class="label">Anzeigen</span><div class="seg" id="f-fav"></div></div>
       <div class="group"><span class="label">Nur 3 Schlafzimmer</span><div class="seg" id="f-rooms"></div></div>
       <div class="group"><label class="label" for="f-taxi">Taxifahrten zum/vom Flughafen</label>
         <select id="f-taxi"><option value="0">keine</option><option value="1" selected>1 (Rückflug früh)</option><option value="2">2 (hin und zurück)</option></select></div>
@@ -126,10 +143,16 @@ input[type=range]{width:180px;accent-color:var(--accent)}
     </div>
   </section>
 
-  <section aria-label="Karte"><div id="map" role="region" aria-label="Karte der Wohnungen"></div><p class="mapnote" id="mapnote">Preis pro Person der günstigsten Kombination je Wohnung. Punkt anklicken für Details.</p></section>
-
-  <div class="summary"><span id="count" class="stat"></span><span id="best"></span></div>
-  <div class="list" id="list"></div>
+  <div class="split">
+    <div class="col-list">
+      <div class="summary"><span id="count" class="stat"></span><span id="best"></span></div>
+      <div class="list" id="list"></div>
+    </div>
+    <aside class="col-map" aria-label="Karte">
+      <div id="map" role="region" aria-label="Karte der Wohnungen"></div>
+      <p class="mapnote" id="mapnote">Punkt anklicken springt zur Wohnung, „Auf Karte zeigen“ springt zum Punkt. Preise pro Person mit dem gewählten Flug.</p>
+    </aside>
+  </div>
 
   <p class="note">Flugpreise: günstigster Wert aus Skyscanner, Kayak und Opodo. Wohnungen: Airbnb (inkl. Gebühren) bzw. Booking (evtl. zzgl. Touristensteuer). Wohnungen erscheinen nur für Zeiträume, in denen sie laut Airbnb-Kalender frei sind. Taxi und Fahrzeiten sind grobe Schätzungen. Alle Preise ändern sich laufend; vor dem Buchen auf der jeweiligen Seite prüfen.</p>
 </div>
@@ -217,19 +240,21 @@ const ST=[
  {n:'Apartment Ancora',la:41.21852,lo:1.72857,town:'Vilanova',beds:'2 SZ: 2 Einzel / frz. Doppel',sz:2,r:4.6,rc:6,disp:'9,2 (6)',src:'Booking',pr:{"28-04": 1224, "28-05": 1330, "29-05": 1200, "29-06": 1309, "30-06": 1175},u:(d,e)=>`https://www.booking.com/hotel/es/apartment-ancora-vilanova-i-la-geltru.de.html?checkin=${d}&checkout=${e}&group_adults=3`}
 ];
 
-const DEF={one:true,period:'30-06',time:'all',towns:Object.keys(TW),rooms:false,sort:'pp',taxi:1,bag:0,max:800};
-let S=DEF;
-try{const s=JSON.parse(localStorage.getItem('planer3')||'null');if(s)S={...DEF,...s};if(!PER[S.period])S.period='30-06'}catch(e){}
-const save=()=>{try{localStorage.setItem('planer3',JSON.stringify(S))}catch(e){}};
+const DEF={period:'30-06',time:'all',towns:Object.keys(TW),rooms:false,sort:'pp',taxi:1,bag:0,max:800,view:'all',fav:[],choice:{}};
+let S={...DEF};
+try{const s=JSON.parse(localStorage.getItem('planer4')||'null');if(s)S={...DEF,...s};if(S.period!=='all'&&!PER[S.period])S.period='30-06'}catch(e){}
+const save=()=>{try{localStorage.setItem('planer4',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const eur=n=>n.toLocaleString('de-DE')+' €';
+const keyOf=s=>s.n+'|'+s.town;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function chips(el,items,isOn,onClick){el.innerHTML='';items.forEach(([v,l])=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=l;b.setAttribute('aria-pressed',isOn(v));b.onclick=()=>{onClick(v);save();ui();render()};el.appendChild(b)})}
 function ui(){
   chips($('f-period'),[['all','alle'],...Object.entries(PER).map(([k,v])=>[k,`${v[2]} (${v[3]} N.)`])],v=>S.period===v,v=>S.period=v);
   chips($('f-time'),[['all','alle'],['night','abends'],['day','tagsüber']],v=>S.time===v,v=>S.time=v);
   chips($('f-towns'),Object.keys(TW).map(t=>[t,t]),v=>S.towns.includes(v),v=>{S.towns=S.towns.includes(v)?S.towns.filter(x=>x!==v):[...S.towns,v]});
-  chips($('f-one'),[[true,'nur günstigster'],[false,'alle']],v=>S.one===v,v=>S.one=v);
+  chips($('f-fav'),[['all','alle'],['fav',`gemerkte (${S.fav.length})`]],v=>S.view===v,v=>S.view=v);
   chips($('f-rooms'),[[true,'ja'],[false,'egal']],v=>S.rooms===v,v=>S.rooms=v);
   $('f-sort').value=S.sort;$('f-taxi').value=S.taxi;$('f-bag').value=S.bag;$('f-max').value=S.max;$('f-max-out').textContent=S.max>=800?'egal':eur(+S.max);
 }
@@ -238,72 +263,100 @@ $('f-taxi').onchange=e=>{S.taxi=+e.target.value;save();render()};
 $('f-bag').oninput=e=>{S.bag=Math.max(0,+e.target.value||0);save();render()};
 $('f-max').oninput=e=>{S.max=+e.target.value;$('f-max-out').textContent=S.max>=800?'egal':eur(S.max);save();render()};
 
+// Für jede Wohnung alle passenden Flüge berechnen; gewählt ist die gespeicherte Wahl oder der günstigste
+function build(){
+  const rows=[];
+  for(const s of ST){
+    const key=keyOf(s);
+    if(!S.towns.includes(s.town))continue; if(S.rooms&&s.sz<3)continue; if(S.view==='fav'&&!S.fav.includes(key))continue;
+    const tw=TW[s.town]; const opts=[];
+    for(const f of FL){ if(S.period!=='all'&&f.p!==S.period)continue; if(S.time!=='all'&&f.t!==S.time)continue;
+      const sp=s.pr[f.p]; if(sp==null)continue; const [d,e]=PER[f.p];
+      const taxi=tw.taxi*S.taxi, fl=f.pp*PAX, bag=S.bag*PAX, tot=fl+sp+taxi+bag;
+      opts.push({f,sp,taxi,fl,bag,tot,pp:Math.round(tot/PAX),url:s.u(d,e)});
+    }
+    if(!opts.length)continue;
+    opts.sort((a,b)=>a.pp-b.pp);
+    const sel=opts.find(o=>o.f.id===S.choice[key])||opts[0];
+    if(S.max<800&&sel.pp>S.max)continue;
+    rows.push({s,key,tw,opts,sel});
+  }
+  const k={pp:(a,b)=>a.sel.pp-b.sel.pp,rating:(a,b)=>b.s.r-a.s.r||a.sel.pp-b.sel.pp,airport:(a,b)=>a.tw.taxiMin-b.tw.taxiMin||a.sel.pp-b.sel.pp,city:(a,b)=>a.tw.train-b.tw.train||a.sel.pp-b.sel.pp}[S.sort];
+  return rows.sort(k);
+}
+
+let ACTIVE=null;
 function render(){
-  const combos=[];
-  for(const f of FL){ if(S.period!=='all'&&f.p!==S.period)continue; const [d,e]=PER[f.p]; if(S.time!=='all'&&f.t!==S.time)continue;
-    for(const s of ST){ if(!S.towns.includes(s.town))continue; if(S.rooms&&s.sz<3)continue;
-      const sp=s.pr[f.p]; if(sp==null)continue;
-      const tw=TW[s.town]; const taxi=tw.taxi*S.taxi; const fl=f.pp*PAX; const bag=S.bag*PAX;
-      const tot=fl+sp+taxi+bag; const pp=Math.round(tot/PAX);
-      if(S.max<800&&pp>S.max)continue;
-      combos.push({f,s,sp,tw,taxi,fl,bag,tot,pp,url:s.u(d,e)});
-  }}
-  const k={pp:(a,b)=>a.pp-b.pp,rating:(a,b)=>b.s.r-a.s.r||a.pp-b.pp,airport:(a,b)=>a.tw.taxiMin-b.tw.taxiMin||a.pp-b.pp,city:(a,b)=>a.tw.train-b.tw.train||a.pp-b.pp}[S.sort];
-  combos.sort(k);
-  if(S.one){const seen=new Set();const best={};[...combos].sort((a,b)=>a.pp-b.pp).forEach(c=>{if(!best[c.s.n])best[c.s.n]=c});for(let i=combos.length-1;i>=0;i--){if(best[combos[i].s.n]!==combos[i])combos.splice(i,1)}}
-  const minPP=combos.length?Math.min(...combos.map(c=>c.pp)):0;
-  $('count').textContent=`${combos.length} Kombinationen`;
-  $('best').innerHTML=combos.length?`ab <b>${eur(minPP)}</b> pro Person`:'';
-  drawMap(combos);
+  const rows=build();
+  const minPP=rows.length?Math.min(...rows.map(r=>r.sel.pp)):0;
+  $('count').textContent=`${rows.length} Wohnungen`;
+  $('best').innerHTML=rows.length?`ab <b>${eur(minPP)}</b> pro Person`:'';
   const LI=$('list');LI.innerHTML='';
-  if(!combos.length){LI.innerHTML='<div class="empty">Keine Kombination passt zu den Filtern. Wähle mehr Orte aus oder erhöhe das Maximum pro Person.</div>';return}
-  combos.forEach((c,i)=>{
-    const el=document.createElement('article');el.className='card'+(c.pp===minPP?' top':'');
-    const rating=c.s.disp||c.s.r.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' ★ ('+c.s.rc+')';
+  drawMap(rows,minPP);
+  if(!rows.length){LI.innerHTML=S.view==='fav'?'<div class="empty">Noch nichts gemerkt. Tippe bei einer Wohnung auf „Merken“.</div>':'<div class="empty">Keine Wohnung passt zu den Filtern. Wähle mehr Orte oder Zeiträume aus oder erhöhe das Maximum pro Person.</div>';return}
+  for(const r of rows){
+    const {s,sel,opts,key}=r; const c=sel; const fav=S.fav.includes(key);
+    const el=document.createElement('article');el.className='card'+(c.pp===minPP?' top':'')+(ACTIVE===key?' active':'');el.dataset.key=key;
+    const rating=s.disp||s.r.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' ★ ('+s.rc+')';
+    const options=opts.map(o=>`<option value="${o.f.id}"${o===sel?' selected':''}>${PER[o.f.p][2]} · hin ${o.f.out.split(' ').pop().split('–')[0]} · ${o.f.air.replace(' (1 Ticket)','')} → ${eur(o.pp)} p. P.</option>`).join('');
     el.innerHTML=`
       <div class="cell">
-        <span class="kind">${PER[c.f.p][2]} · Flug ${c.f.id} <span class="tag ${c.f.t}">${c.f.t==='night'?'abends':'tagsüber'}</span>${c.pp===minPP?'<span class="tag best">günstigste</span>':''}</span>
+        <span class="kind"><i class="dot" style="background:${TC[s.town]||'#333'}"></i>${esc(s.town)} <span class="tag">${s.src}</span>${c.pp===minPP?'<span class="tag best">günstigste</span>':''}</span>
+        <span class="name"><a href="${c.url}" target="_blank" rel="noopener">${esc(s.n)}</a></span>
+        <span class="meta">${esc(s.beds)} · ${rating}</span>
+        <span class="meta">Zug nach Barcelona ~${r.tw.train} Min. · Taxi Flughafen ~${r.tw.taxiMin} Min.</span>
+        <span class="acts"><button type="button" class="mini fav" aria-pressed="${fav}">${fav?'★ Gemerkt':'☆ Merken'}</button><button type="button" class="mini locate">Auf Karte zeigen</button></span>
+      </div>
+      <div class="cell">
+        <label class="kind" for="sel-${CSS.escape?CSS.escape(key):key}">Flug · ${opts.length} ${opts.length===1?'Option':'Optionen'} <span class="tag ${c.f.t}">${c.f.t==='night'?'abends':'tagsüber'}</span></label>
+        <select class="fsel" id="sel-${esc(key)}">${options}</select>
         <span class="times">Hin ${c.f.out}<br>Zurück ${c.f.ret}</span>
         <span class="meta">${c.f.air} · ${eur(c.f.pp)} p. P.</span>
         <span class="links"><a href="${c.f.sky}" target="_blank" rel="noopener">Skyscanner</a><a href="${c.f.kay}" target="_blank" rel="noopener">Kayak</a></span>
-      </div>
-      <div class="cell">
-        <span class="kind">${c.s.town} <span class="tag">${c.s.src}</span></span>
-        <span class="name"><a href="${c.url}" target="_blank" rel="noopener">${c.s.n}</a></span>
-        <span class="meta">${c.s.beds} · ${rating}</span>
-        <span class="meta">Zug nach Barcelona ~${c.tw.train} Min. · Taxi Flughafen ~${c.tw.taxiMin} Min.</span>
       </div>
       <div class="cell price">
         <div><div class="pp">${eur(c.pp)}</div><div class="meta">pro Person</div></div>
         <div class="break"><span>Flüge ${eur(c.fl)}</span><span>Wohnung ${eur(c.sp)}</span>${c.taxi?`<span>Taxi ~${eur(c.taxi)}</span>`:''}${c.bag?`<span>Gepäck ${eur(c.bag)}</span>`:''}<span><b>Gesamt ${eur(c.tot)}</b></span></div>
       </div>`;
+    el.querySelector('.fsel').onchange=e=>{S.choice[key]=e.target.value;save();ACTIVE=key;render()};
+    el.querySelector('.fav').onclick=()=>{S.fav=fav?S.fav.filter(x=>x!==key):[...S.fav,key];save();ui();render()};
+    el.querySelector('.locate').onclick=()=>focusKey(key,true);
+    el.onmouseenter=()=>hl(key,true); el.onmouseleave=()=>hl(key,false);
     LI.appendChild(el);
-  });
+  }
 }
 
-let MAP=null,LAYER=null,tileFail=false;
+let MAP=null,LAYER=null,tileFail=false,MK={},lastSig='';
 function initMap(){
-  if(!window.L){document.getElementById('mapnote').textContent='Die Karte konnte nicht geladen werden.';return}
+  if(!window.L){$('mapnote').textContent='Die Karte konnte nicht geladen werden.';return}
   MAP=L.map('map',{scrollWheelZoom:false,zoomControl:true}).setView([41.33,2.0],10);
   const t=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(MAP);
-  let ok=0;t.on('tileload',()=>ok++);t.on('tileerror',()=>{if(!ok&&!tileFail){tileFail=true;document.getElementById('mapnote').textContent='Hier wird der Kartenhintergrund blockiert; die Punkte stimmen trotzdem. In der GitHub-Version erscheint die vollständige Karte.'}});
-  const poi=(ll,txt)=>L.circleMarker(ll,{radius:5,color:'#6b7280',weight:2,fillColor:'#fff',fillOpacity:1}).bindTooltip(txt,{permanent:true,direction:'right',offset:[6,0]}).addTo(MAP);
+  let ok=0;t.on('tileload',()=>ok++);t.on('tileerror',()=>{if(!ok&&!tileFail){tileFail=true;$('mapnote').textContent='Hier wird der Kartenhintergrund blockiert; die Punkte stimmen trotzdem. In der GitHub-Version erscheint die vollständige Karte.'}});
+  const poi=(ll,txt)=>L.circleMarker(ll,{radius:5,color:'#6b7280',weight:2,fillColor:'#fff',fillOpacity:1,interactive:false}).bindTooltip(txt,{permanent:true,direction:'right',offset:[6,0]}).addTo(MAP);
   poi([41.2974,2.0833],'✈ Flughafen BCN');poi([41.3870,2.1701],'Barcelona Zentrum');
   LAYER=L.layerGroup().addTo(MAP);
 }
 const TC={'Castelldefels':'#c2412d','Gavà':'#d9734e','Sitges':'#2b7a78','Vilanova':'#33415c','Cubelles':'#5b6b8c','Montgat':'#b7791f','El Masnou':'#a3672a','Premià de Mar':'#7a4fa3','Vilassar de Mar':'#9c4f86','Caldes d’Estrac':'#3f7f4f','Sant Vicenç de Montalt':'#5d8f3a','Arenys de Mar':'#2f6b5e'};
-function drawMap(combos){
-  if(!MAP)return; LAYER.clearLayers();
-  const best={};for(const c of combos){if(!best[c.s.n]||c.pp<best[c.s.n].pp)best[c.s.n]=c}
-  const arr=Object.values(best);if(!arr.length)return;
-  const min=Math.min(...arr.map(c=>c.pp));const pts=[];
-  for(const c of arr){const ll=[c.s.la,c.s.lo];pts.push(ll);
-    const m=L.circleMarker(ll,{radius:7,color:'#fff',weight:2,fillColor:TC[c.s.town]||'#333',fillOpacity:1});
-    m.bindTooltip(eur(c.pp),{permanent:true,direction:'top',offset:[0,-8],className:c.pp===min?'best':''});
-    m.bindPopup(`<b>${c.s.n}</b><br>${c.s.town} · ${c.s.beds}<br><span style="font-variant-numeric:tabular-nums">${eur(c.pp)} p. P. · gesamt ${eur(c.tot)}</span><br>${PER[c.f.p][2]}, Flug ${c.f.id} (${c.f.out.split(' ').slice(-1)[0]})<br><a href="${c.url}" target="_blank" rel="noopener">Wohnung ansehen</a> · <a href="${c.f.sky}" target="_blank" rel="noopener">Flug</a>`);
-    m.addTo(LAYER);}
-  pts.push([41.2974,2.0833]);
-  MAP.fitBounds(L.latLngBounds(pts).pad(0.08),{maxZoom:13});
+function drawMap(rows,minPP){
+  if(!MAP)return; LAYER.clearLayers(); MK={};
+  const pts=[];
+  for(const r of rows){const ll=[r.s.la,r.s.lo];pts.push(ll);const fav=S.fav.includes(r.key);
+    const m=L.circleMarker(ll,{radius:ACTIVE===r.key?11:7,color:ACTIVE===r.key?'#111':'#fff',weight:2,fillColor:TC[r.s.town]||'#333',fillOpacity:1});
+    m.bindTooltip((fav?'★ ':'')+eur(r.sel.pp),{permanent:true,direction:'top',offset:[0,-8],className:(r.sel.pp===minPP?'best':'')+(ACTIVE===r.key?' act':'')});
+    m.on('click',()=>focusKey(r.key,false));
+    m.on('mouseover',()=>hl(r.key,true));m.on('mouseout',()=>hl(r.key,false));
+    m.addTo(LAYER);MK[r.key]=m;}
+  const sig=rows.map(r=>r.key).sort().join(',');
+  if(sig!==lastSig&&pts.length){lastSig=sig;pts.push([41.2974,2.0833]);MAP.fitBounds(L.latLngBounds(pts).pad(0.08),{maxZoom:13})}
+}
+function hl(key,on){
+  const m=MK[key]; if(m&&ACTIVE!==key){m.setStyle({radius:on?10:7,color:on?'#111':'#fff'});if(on)m.bringToFront()}
+  const c=document.querySelector(`.card[data-key="${CSS.escape(key)}"]`); if(c)c.classList.toggle('hover',on);
+}
+function focusKey(key,fromCard){
+  ACTIVE=key; render();
+  const m=MK[key]; if(m&&MAP){ if(fromCard){$('map').scrollIntoView({behavior:'smooth',block:'nearest'})} MAP.flyTo(m.getLatLng(),Math.max(MAP.getZoom(),13),{duration:.6}); m.bringToFront(); }
+  if(!fromCard){const c=document.querySelector(`.card[data-key="${CSS.escape(key)}"]`); if(c)c.scrollIntoView({behavior:'smooth',block:'center'})}
 }
 initMap();ui();render();
 </script>
