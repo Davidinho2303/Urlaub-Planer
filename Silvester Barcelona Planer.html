@@ -1,0 +1,225 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Silvester Barcelona Planer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: Filterleiste oben (sticky), darunter sortierte Kombi-Karten Flug + Wohnung */
+:root{
+  --bg:#f3f5f4; --paper:#fff; --fg:#1c2627; --muted:#5e6b6c; --line:#d7dfde; --soft:#e9efee;
+  --accent:#c2412d; --accent-ink:#fff; --sea:#2b7a78; --night:#33415c; --day:#b7791f;
+  --display:"Fraunces",Georgia,serif; --body:"Work Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121718; --paper:#1a2122; --fg:#e8eeee; --muted:#9aa8a9; --line:#2e393a; --soft:#222b2c;
+  --accent:#ef7a63; --accent-ink:#1a1210; --sea:#56b8b2; --night:#9fb0dc; --day:#e0aa52; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121718; --paper:#1a2122; --fg:#e8eeee; --muted:#9aa8a9; --line:#2e393a; --soft:#222b2c;
+  --accent:#ef7a63; --accent-ink:#1a1210; --sea:#56b8b2; --night:#9fb0dc; --day:#e0aa52; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px;display:grid;gap:18px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:6px 0 0;max-width:72ch}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:flex-start}
+.group{display:grid;gap:6px;min-width:0}
+.label{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--fg);font:500 13.5px var(--body);padding:6px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select,input[type=number]{font:500 14px var(--body);color:var(--fg);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+input[type=number]{width:84px;font-variant-numeric:tabular-nums}
+input[type=range]{width:180px;accent-color:var(--accent)}
+.stat{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.summary{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline}
+.summary b{font-family:var(--display);font-weight:600;font-size:20px}
+.list{display:grid;gap:10px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 170px;overflow:hidden}
+.card.top{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.cell{padding:12px 14px;min-width:0;display:grid;gap:4px;align-content:start}
+.cell+.cell{border-left:1px solid var(--line)}
+.kind{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;display:flex;gap:6px;align-items:center}
+.tag{font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--soft);color:var(--fg);letter-spacing:0;text-transform:none}
+.tag.night{color:var(--night)} .tag.day{color:var(--day)} .tag.best{background:var(--accent);color:var(--accent-ink)}
+.name{font-weight:600;font-size:15px}
+.name a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
+.name a:hover{text-decoration-color:currentColor}
+.meta{color:var(--muted);font-size:13px}
+.times{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.links{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px}
+.links a{color:var(--sea)}
+.price{background:var(--soft);text-align:right}
+.pp{font-family:var(--display);font-weight:600;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.break{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;display:grid;gap:1px}
+.empty{padding:28px;text-align:center;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:12px}
+.note{color:var(--muted);font-size:12.5px;max-width:85ch}
+@media (max-width:760px){
+  .card{grid-template-columns:1fr}
+  .cell+.cell{border-left:0;border-top:1px solid var(--line)}
+  .price{text-align:left;display:flex;justify-content:space-between;align-items:end;gap:12px}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Silvester Barcelona Planer</h1>
+    <p class="sub">Flüge ab BER (nonstop, 3 Personen) mit Ferienwohnungen in Vororten von Barcelona kombinieren. Preise ohne Koffer, Stand 15.10.2026.</p>
+  </header>
+
+  <section class="panel" aria-label="Filter">
+    <div class="row">
+      <div class="group"><span class="label">Zeitraum</span><div class="seg" id="f-period"></div></div>
+      <div class="group"><span class="label">Hinflug</span><div class="seg" id="f-time"></div></div>
+      <div class="group"><span class="label">Sortieren</span>
+        <select id="f-sort"><option value="pp">Preis pro Person</option><option value="rating">Bewertung</option><option value="airport">Nähe Flughafen</option><option value="city">Nähe Barcelona</option></select></div>
+    </div>
+    <div class="group"><span class="label">Orte</span><div class="seg" id="f-towns"></div></div>
+    <div class="row">
+      <div class="group"><span class="label">Flüge je Wohnung</span><div class="seg" id="f-one"></div></div>
+      <div class="group"><span class="label">Nur 3 Schlafzimmer</span><div class="seg" id="f-rooms"></div></div>
+      <div class="group"><label class="label" for="f-taxi">Taxifahrten zum/vom Flughafen</label>
+        <select id="f-taxi"><option value="0">keine</option><option value="1" selected>1 (Rückflug früh)</option><option value="2">2 (hin und zurück)</option></select></div>
+      <div class="group"><label class="label" for="f-bag">Gepäck pro Person, gesamt (€)</label><input id="f-bag" type="number" min="0" step="10" value="0"></div>
+      <div class="group"><label class="label" for="f-max">Max. pro Person: <span id="f-max-out" class="stat"></span></label><input id="f-max" type="range" min="300" max="800" step="10" value="800"></div>
+    </div>
+  </section>
+
+  <div class="summary"><span id="count" class="stat"></span><span id="best"></span></div>
+  <div class="list" id="list"></div>
+
+  <p class="note">Flugpreise: günstigster Wert aus Skyscanner, Kayak und Opodo. Wohnungen: Airbnb (inkl. Gebühren) bzw. Booking (evtl. zzgl. Touristensteuer). „Nicht verfügbar“ heißt, die Wohnung zeigte für diesen Zeitraum keinen Preis. Taxi und Fahrzeiten sind grobe Schätzungen. Alle Preise ändern sich laufend; vor dem Buchen auf der jeweiligen Seite prüfen.</p>
+</div>
+
+<script>
+const PAX=3;
+const sky=(d1,d2)=>`https://www.skyscanner.de/transport/fluge/ber/bcn/${d1}/${d2}/?adultsv2=3&cabinclass=economy&rtn=1&preferdirects=true&stops=!oneStop,!twoPlusStops&sortby=cheapest`;
+const kay=(d1,d2,day)=>`https://www.kayak.de/flights/BER-BCN/${d1}/${d2}/3adults?fs=stops=0${day?';takeoff=0000,1400__':''}&sort=price_a`;
+const PER={'27-03':['2026-12-27','2027-01-03','27.12.–3.1.',7],'27-04':['2026-12-27','2027-01-04','27.12.–4.1.',8],'28-04':['2026-12-28','2027-01-04','28.12.–4.1.',7],'28-05':['2026-12-28','2027-01-05','28.12.–5.1.',8],'29-05':['2026-12-29','2027-01-05','29.12.–5.1.',7],'29-06':['2026-12-29','2027-01-06','29.12.–6.1.',8],'30-06':['2026-12-30','2027-01-06','30.12.–6.1.',7]};
+const WD={'27':'So','28':'Mo','29':'Di','30':'Mi','03':'So','04':'Mo','05':'Di','06':'Mi'};
+const F=(p,id,o,air,pp,t)=>{const [a,b]=PER[p];const s=x=>x.slice(2).replace(/-/g,'');const d1=p.slice(0,2),d2=p.slice(3);
+ return {id,p,out:`${WD[d1]} ${d1}.12. ${o}`,ret:`${WD[d2]} ${+d2}.1. 7:00–9:45`,air,pp,t,sky:sky(s(a),s(b)),kay:kay(a,b,t==='day')}};
+const FL=[
+ F('30-06','D2','21:10–23:50','Vueling (1 Ticket)',142,'night'),
+ F('30-06','D','21:45–0:20','Ryanair + Vueling',141,'night'),
+ F('30-06','A','10:30–13:10','Vueling (1 Ticket)',173,'day'),
+ F('30-06','A2','10:25–13:00','Ryanair + Vueling',181,'day'),
+ F('29-06','E','19:30–22:05','Ryanair + Vueling',150,'night'),
+ F('29-06','E2','20:40–23:20','Vueling (1 Ticket)',159,'night'),
+ F('29-06','B','10:30–13:10','Vueling (1 Ticket)',222,'day'),
+ F('29-05','G','19:30–22:05','Ryanair + Vueling',178,'night'),
+ F('29-05','G2','20:30–23:10','Vueling (1 Ticket)',195,'night'),
+ F('29-05','H','10:30–13:10','Vueling (1 Ticket)',255,'day'),
+ F('28-05','I','22:05–0:40','Ryanair + Vueling',164,'night'),
+ F('28-05','I2','21:25–0:05','Vueling (1 Ticket)',175,'night'),
+ F('28-05','J','10:50–13:25','easyJet + Vueling',240,'day'),
+ F('28-05','J2','10:40–13:20','Vueling (1 Ticket)',251,'day'),
+ F('28-04','K','22:05–0:40','Ryanair + Vueling',212,'night'),
+ F('28-04','K2','21:25–0:05','Vueling (1 Ticket)',220,'night'),
+ F('28-04','L','10:50–13:25','easyJet + Vueling',291,'day'),
+ F('28-04','L2','10:40–13:20','Vueling (1 Ticket)',298,'day'),
+ F('27-04','M','22:20–1:05','easyJet + Vueling',205,'night'),
+ F('27-04','M2','21:25–0:05','Vueling (1 Ticket)',227,'night'),
+ F('27-04','N','10:30–13:10','Vueling (1 Ticket)',312,'day'),
+ F('27-03','O','22:20–1:05','easyJet + Vueling',281,'night'),
+ F('27-03','O2','21:25–0:05','Vueling (1 Ticket)',305,'night'),
+ F('27-03','P','10:30–13:10','Vueling (1 Ticket)',377,'day')
+];
+// Orte: Zug nach Barcelona (Min.), Taxi zum Flughafen (Min., € grob)
+const TW={
+ 'Castelldefels':{train:20,taxiMin:15,taxi:30},
+ 'Sitges':{train:38,taxiMin:28,taxi:58},
+ 'Vilanova':{train:52,taxiMin:38,taxi:75},
+ 'Cubelles':{train:58,taxiMin:42,taxi:80},
+ 'Badalona':{train:18,taxiMin:30,taxi:55},
+ 'Premià de Mar':{train:32,taxiMin:40,taxi:75},
+ 'Vilassar de Mar':{train:35,taxiMin:42,taxi:80}
+};
+const ab=(id,d1,d2)=>`https://www.airbnb.de/rooms/${id}?check_in=${d1}&check_out=${d2}&adults=3`;
+const ST=[
+ {n:'Royal Marina Gardens',town:'Castelldefels',beds:'4 Einzelbetten',sz:1,r:4.77,rc:2961,src:'Airbnb',pr:{'29-05':935,'29-06':1085,'30-06':935},u:(d,e)=>ab('859869511773649221',d,e)},
+ {n:'3 Zimmer mit Meerblick',town:'Castelldefels',beds:'3 SZ: Doppel, Einzel, Einzel',sz:3,r:4.89,rc:18,src:'Airbnb',pr:{'27-03':1179,'27-04':1330,'28-04':1179,'28-05':1330,'29-05':1179,'29-06':1330,'30-06':1179},u:(d,e)=>ab('1021644018958572938',d,e)},
+ {n:'Wohnung am Strand',town:'Castelldefels',beds:'3 SZ: 2 Doppel, 2 Einzel',sz:3,r:4.91,rc:205,src:'Airbnb',pr:{'27-03':1439,'27-04':1464,'28-04':1439,'28-05':1464,'29-05':1464,'29-06':1624,'30-06':1422},u:(d,e)=>ab('13845153',d,e)},
+ {n:'Blaue Wohnung',town:'Sitges',beds:'3 SZ, 3 Betten',sz:3,r:4.74,rc:74,src:'Airbnb',pr:{'29-05':790,'29-06':814,'30-06':790},u:(d,e)=>ab('575992486173692077',d,e)},
+ {n:'Penthouse zentral',town:'Sitges',beds:'2 SZ: Queen / 2 Einzel',sz:2,r:4.89,rc:279,src:'Airbnb',pr:{'29-05':890,'29-06':1020,'30-06':890},u:(d,e)=>ab('12909242',d,e)},
+ {n:'Möblierte Wohnung, 50 m Strand',town:'Sitges',beds:'2 SZ: Queen / Queen + 2 Einzel',sz:2,r:4.94,rc:104,src:'Airbnb',pr:{'30-06':885},u:(d,e)=>ab('14977308',d,e)},
+ {n:'Zentral, elegant, 2 Bäder',town:'Sitges',beds:'3 SZ, je 1 Doppelbett',sz:3,r:4.94,rc:140,src:'Airbnb',pr:{'30-06':1181},u:(d,e)=>ab('18823261',d,e)},
+ {n:'Charmante Wohnung in Meeresnähe',town:'Vilanova',beds:'3 SZ, je 1 Bett',sz:3,r:4.95,rc:74,src:'Airbnb',pr:{'27-03':1136,'27-04':1259,'28-04':1100,'28-05':1223,'29-05':1064,'29-06':1187,'30-06':1028},u:(d,e)=>ab('1030233955084111098',d,e)},
+ {n:'Modern, zentral, 100 m vom Meer',town:'Vilanova',beds:'3 SZ: 2 Doppel, 1 Einzel · 2 Bäder',sz:3,r:5.0,rc:17,src:'Airbnb',pr:{'27-03':1233,'27-04':1383,'28-04':1202,'28-05':1352,'29-05':1171,'29-06':1321,'30-06':1140},u:(d,e)=>ab('1430365461149670289',d,e)},
+ {n:'Dachgeschoss mit Dachterrasse',town:'Vilanova',beds:'2 SZ: 2 Einzel / 1 Doppel',sz:2,r:4.89,rc:37,src:'Airbnb',pr:{'27-03':1071,'27-04':1175,'28-04':1175,'28-05':1279,'29-05':1151,'29-06':1259,'30-06':1128},u:(d,e)=>ab('12578762',d,e)},
+ {n:'Penthouse mit Terrasse & Pool',town:'Vilanova',beds:'3 SZ · 2 Bäder',sz:3,r:4.98,rc:45,src:'Airbnb',pr:{'27-03':1310,'27-04':1487,'28-04':1310,'28-05':1487,'29-05':1310,'29-06':1487,'30-06':1310},u:(d,e)=>ab('947592370021925444',d,e)},
+ {n:'Vilanova Beach Stay',town:'Vilanova',beds:'2 SZ: 2 Einzel, frz. Doppel, Sofa',sz:2,r:4.7,rc:24,disp:'9,4 (24)',src:'Booking',pr:{'27-03':1168,'27-04':1294,'28-04':1076,'28-05':1202,'29-05':1025,'29-06':1151,'30-06':975},u:(d,e)=>`https://www.booking.com/hotel/es/vilanova-beach-stay.de.html?checkin=${d}&checkout=${e}&group_adults=3`},
+ {n:'Apartment Ancora',town:'Vilanova',beds:'2 SZ: 2 Einzel / frz. Doppel',sz:2,r:4.6,rc:6,disp:'9,2 (6)',src:'Booking',pr:{'28-04':1224,'28-05':1330,'29-05':1200,'29-06':1309,'30-06':1175},u:(d,e)=>`https://www.booking.com/hotel/es/apartment-ancora-vilanova-i-la-geltru.de.html?checkin=${d}&checkout=${e}&group_adults=3`},
+ {n:'Wohnung nahe Meer',town:'Cubelles',beds:'3 SZ: 2 Doppel, 2 Einzel',sz:3,r:4.88,rc:214,src:'Airbnb',pr:{'27-03':755,'27-04':835,'28-04':835,'28-05':931,'29-05':835,'29-06':931,'30-06':821},u:(d,e)=>ab('3189955',d,e)},
+ {n:'Altes Navy House',town:'Badalona',beds:'3 SZ: King, Schlafcouch, 2 Einzel',sz:3,r:4.76,rc:135,src:'Airbnb',pr:{'30-06':1049},u:(d,e)=>ab('15318382',d,e)},
+ {n:'Mar Loft, 4 Min. zum Bahnhof',town:'Premià de Mar',beds:'1 Raum: Doppel + 2 Einzel',sz:1,r:4.87,rc:63,src:'Airbnb',pr:{'30-06':577},u:(d,e)=>ab('40828903',d,e)},
+ {n:'Design-Haus',town:'Vilassar de Mar',beds:'3 SZ: Doppel / Einzel + Etagenbett / Einzel',sz:3,r:4.98,rc:45,src:'Airbnb',pr:{'27-03':923,'27-04':1014,'28-04':923,'28-05':1014,'29-05':923,'29-06':1014,'30-06':1014},u:(d,e)=>ab('16704160',d,e)}
+];
+
+const DEF={one:true,period:'30-06',time:'all',towns:Object.keys(TW),rooms:false,sort:'pp',taxi:1,bag:0,max:800};
+let S=DEF;
+try{const s=JSON.parse(localStorage.getItem('planer2')||'null');if(s)S={...DEF,...s};if(!PER[S.period])S.period='30-06'}catch(e){}
+const save=()=>{try{localStorage.setItem('planer2',JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const eur=n=>n.toLocaleString('de-DE')+' €';
+
+function chips(el,items,isOn,onClick){el.innerHTML='';items.forEach(([v,l])=>{const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=l;b.setAttribute('aria-pressed',isOn(v));b.onclick=()=>{onClick(v);save();ui();render()};el.appendChild(b)})}
+function ui(){
+  chips($('f-period'),[['all','alle'],...Object.entries(PER).map(([k,v])=>[k,`${v[2]} (${v[3]} N.)`])],v=>S.period===v,v=>S.period=v);
+  chips($('f-time'),[['all','alle'],['night','abends'],['day','tagsüber']],v=>S.time===v,v=>S.time=v);
+  chips($('f-towns'),Object.keys(TW).map(t=>[t,t]),v=>S.towns.includes(v),v=>{S.towns=S.towns.includes(v)?S.towns.filter(x=>x!==v):[...S.towns,v]});
+  chips($('f-one'),[[true,'nur günstigster'],[false,'alle']],v=>S.one===v,v=>S.one=v);
+  chips($('f-rooms'),[[true,'ja'],[false,'egal']],v=>S.rooms===v,v=>S.rooms=v);
+  $('f-sort').value=S.sort;$('f-taxi').value=S.taxi;$('f-bag').value=S.bag;$('f-max').value=S.max;$('f-max-out').textContent=S.max>=800?'egal':eur(+S.max);
+}
+$('f-sort').onchange=e=>{S.sort=e.target.value;save();render()};
+$('f-taxi').onchange=e=>{S.taxi=+e.target.value;save();render()};
+$('f-bag').oninput=e=>{S.bag=Math.max(0,+e.target.value||0);save();render()};
+$('f-max').oninput=e=>{S.max=+e.target.value;$('f-max-out').textContent=S.max>=800?'egal':eur(S.max);save();render()};
+
+function render(){
+  const combos=[];
+  for(const f of FL){ if(S.period!=='all'&&f.p!==S.period)continue; const [d,e]=PER[f.p]; if(S.time!=='all'&&f.t!==S.time)continue;
+    for(const s of ST){ if(!S.towns.includes(s.town))continue; if(S.rooms&&s.sz<3)continue;
+      const sp=s.pr[f.p]; if(sp==null)continue;
+      const tw=TW[s.town]; const taxi=tw.taxi*S.taxi; const fl=f.pp*PAX; const bag=S.bag*PAX;
+      const tot=fl+sp+taxi+bag; const pp=Math.round(tot/PAX);
+      if(S.max<800&&pp>S.max)continue;
+      combos.push({f,s,sp,tw,taxi,fl,bag,tot,pp,url:s.u(d,e)});
+  }}
+  const k={pp:(a,b)=>a.pp-b.pp,rating:(a,b)=>b.s.r-a.s.r||a.pp-b.pp,airport:(a,b)=>a.tw.taxiMin-b.tw.taxiMin||a.pp-b.pp,city:(a,b)=>a.tw.train-b.tw.train||a.pp-b.pp}[S.sort];
+  combos.sort(k);
+  if(S.one){const seen=new Set();const best={};[...combos].sort((a,b)=>a.pp-b.pp).forEach(c=>{if(!best[c.s.n])best[c.s.n]=c});for(let i=combos.length-1;i>=0;i--){if(best[combos[i].s.n]!==combos[i])combos.splice(i,1)}}
+  const minPP=combos.length?Math.min(...combos.map(c=>c.pp)):0;
+  $('count').textContent=`${combos.length} Kombinationen`;
+  $('best').innerHTML=combos.length?`ab <b>${eur(minPP)}</b> pro Person`:'';
+  const L=$('list');L.innerHTML='';
+  if(!combos.length){L.innerHTML='<div class="empty">Keine Kombination passt zu den Filtern. Wähle mehr Orte aus oder erhöhe das Maximum pro Person.</div>';return}
+  combos.forEach((c,i)=>{
+    const el=document.createElement('article');el.className='card'+(c.pp===minPP?' top':'');
+    const rating=c.s.disp||c.s.r.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' ★ ('+c.s.rc+')';
+    el.innerHTML=`
+      <div class="cell">
+        <span class="kind">${PER[c.f.p][2]} · Flug ${c.f.id} <span class="tag ${c.f.t}">${c.f.t==='night'?'abends':'tagsüber'}</span>${c.pp===minPP?'<span class="tag best">günstigste</span>':''}</span>
+        <span class="times">Hin ${c.f.out}<br>Zurück ${c.f.ret}</span>
+        <span class="meta">${c.f.air} · ${eur(c.f.pp)} p. P.</span>
+        <span class="links"><a href="${c.f.sky}" target="_blank" rel="noopener">Skyscanner</a><a href="${c.f.kay}" target="_blank" rel="noopener">Kayak</a></span>
+      </div>
+      <div class="cell">
+        <span class="kind">${c.s.town} <span class="tag">${c.s.src}</span></span>
+        <span class="name"><a href="${c.url}" target="_blank" rel="noopener">${c.s.n}</a></span>
+        <span class="meta">${c.s.beds} · ${rating}</span>
+        <span class="meta">Zug nach Barcelona ~${c.tw.train} Min. · Taxi Flughafen ~${c.tw.taxiMin} Min.</span>
+      </div>
+      <div class="cell price">
+        <div><div class="pp">${eur(c.pp)}</div><div class="meta">pro Person</div></div>
+        <div class="break"><span>Flüge ${eur(c.fl)}</span><span>Wohnung ${eur(c.sp)}</span>${c.taxi?`<span>Taxi ~${eur(c.taxi)}</span>`:''}${c.bag?`<span>Gepäck ${eur(c.bag)}</span>`:''}<span><b>Gesamt ${eur(c.tot)}</b></span></div>
+      </div>`;
+    L.appendChild(el);
+  });
+}
+ui();render();
+</script>
+
+</body></html>
