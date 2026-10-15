@@ -1,4 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Silvester Barcelona Planer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +21,7 @@
   --bg:#121718; --paper:#1a2122; --fg:#e8eeee; --muted:#9aa8a9; --line:#2e393a; --soft:#222b2c;
   --accent:#ef7a63; --accent-ink:#1a1210; --sea:#56b8b2; --night:#9fb0dc; --day:#e0aa52; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
 .wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px;display:grid;gap:18px}
 h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}
 .sub{color:var(--muted);margin:6px 0 0;max-width:72ch}
@@ -60,12 +64,48 @@ input[type=range]{width:180px;accent-color:var(--accent)}
   .cell+.cell{border-left:0;border-top:1px solid var(--line)}
   .price{text-align:left;display:flex;justify-content:space-between;align-items:end;gap:12px}
 }
+
+/* Leaflet-Grundstile (inline, da nur Skripte vom CDN geladen werden dürfen) */
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-container{overflow:hidden;-webkit-tap-highlight-color:transparent;font:inherit}
+.leaflet-tile,.leaflet-marker-icon{user-select:none}
+.leaflet-tile{visibility:hidden;max-width:none!important;max-height:none!important;width:256px;height:256px}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-container img.leaflet-tile{max-width:none!important}
+.leaflet-pane>svg path{pointer-events:auto}
+.leaflet-zoom-animated{transform-origin:0 0}
+.leaflet-zoom-anim .leaflet-zoom-animated{transition:transform .25s cubic-bezier(0,0,.25,1)}
+.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}
+.leaflet-control-container .leaflet-top,.leaflet-control-container .leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
+.leaflet-top{top:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-right{right:0}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto;float:left;clear:both;margin:10px}
+.leaflet-right .leaflet-control{float:right}
+.leaflet-bar{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.leaflet-bar a{display:block;width:30px;height:30px;line-height:30px;text-align:center;text-decoration:none;color:var(--fg);font:600 18px var(--body)}
+.leaflet-bar a+a{border-top:1px solid var(--line)}
+.leaflet-control-attribution{background:color-mix(in srgb,var(--paper) 85%,transparent);font-size:10.5px;padding:0 6px;margin:0;color:var(--muted)}
+.leaflet-control-attribution a{color:var(--muted)}
+.leaflet-popup{position:absolute;text-align:left;margin-bottom:14px}
+.leaflet-popup-content-wrapper{background:var(--paper);color:var(--fg);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:2px}
+.leaflet-popup-content{margin:10px 12px;font-size:13px;line-height:1.4;min-width:180px}
+.leaflet-popup-content a{color:var(--sea)}
+.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-left:-20px;overflow:hidden;pointer-events:none}
+.leaflet-popup-tip{width:14px;height:14px;padding:1px;margin:-8px auto 0;transform:rotate(45deg);background:var(--paper)}
+.leaflet-popup-close-button{position:absolute;top:2px;right:6px;text-decoration:none;color:var(--muted);font:600 16px var(--body)}
+.leaflet-tooltip{position:absolute;padding:1px 6px;background:var(--paper);color:var(--fg);border:1px solid var(--line);border-radius:6px;white-space:nowrap;font:600 11.5px var(--body);font-variant-numeric:tabular-nums;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.leaflet-tooltip.best{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{display:none}
+#map{height:430px;border-radius:12px;border:1px solid var(--line);background:var(--soft);position:relative}
+.mapnote{font-size:12.5px;color:var(--muted);margin:6px 2px 0}
+@media (max-width:760px){#map{height:340px}}
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header>
     <h1>Silvester Barcelona Planer</h1>
-    <p class="sub">Flüge ab BER (nonstop, 3 Personen) mit Ferienwohnungen in Vororten von Barcelona kombinieren. Preise ohne Koffer, Stand 15.10.2026.</p>
+    <p class="sub">Flüge ab BER (nonstop, 3 Personen) mit Ferienwohnungen in Vororten von Barcelona kombinieren. Preise ohne Koffer, Verfügbarkeit geprüft am 15.10.2026.</p>
   </header>
 
   <section class="panel" aria-label="Filter">
@@ -86,12 +126,15 @@ input[type=range]{width:180px;accent-color:var(--accent)}
     </div>
   </section>
 
+  <section aria-label="Karte"><div id="map" role="region" aria-label="Karte der Wohnungen"></div><p class="mapnote" id="mapnote">Preis pro Person der günstigsten Kombination je Wohnung. Punkt anklicken für Details.</p></section>
+
   <div class="summary"><span id="count" class="stat"></span><span id="best"></span></div>
   <div class="list" id="list"></div>
 
-  <p class="note">Flugpreise: günstigster Wert aus Skyscanner, Kayak und Opodo. Wohnungen: Airbnb (inkl. Gebühren) bzw. Booking (evtl. zzgl. Touristensteuer). „Nicht verfügbar“ heißt, die Wohnung zeigte für diesen Zeitraum keinen Preis. Taxi und Fahrzeiten sind grobe Schätzungen. Alle Preise ändern sich laufend; vor dem Buchen auf der jeweiligen Seite prüfen.</p>
+  <p class="note">Flugpreise: günstigster Wert aus Skyscanner, Kayak und Opodo. Wohnungen: Airbnb (inkl. Gebühren) bzw. Booking (evtl. zzgl. Touristensteuer). Wohnungen erscheinen nur für Zeiträume, in denen sie laut Airbnb-Kalender frei sind. Taxi und Fahrzeiten sind grobe Schätzungen. Alle Preise ändern sich laufend; vor dem Buchen auf der jeweiligen Seite prüfen.</p>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const PAX=3;
 const sky=(d1,d2)=>`https://www.skyscanner.de/transport/fluge/ber/bcn/${d1}/${d2}/?adultsv2=3&cabinclass=economy&rtn=1&preferdirects=true&stops=!oneStop,!twoPlusStops&sortby=cheapest`;
@@ -129,38 +172,55 @@ const FL=[
 // Orte: Zug nach Barcelona (Min.), Taxi zum Flughafen (Min., € grob)
 const TW={
  'Castelldefels':{train:20,taxiMin:15,taxi:30},
+ 'Gavà':{train:18,taxiMin:12,taxi:25},
  'Sitges':{train:38,taxiMin:28,taxi:58},
  'Vilanova':{train:52,taxiMin:38,taxi:75},
  'Cubelles':{train:58,taxiMin:42,taxi:80},
- 'Badalona':{train:18,taxiMin:30,taxi:55},
+ 'Montgat':{train:18,taxiMin:30,taxi:55},
+ 'El Masnou':{train:22,taxiMin:33,taxi:60},
  'Premià de Mar':{train:32,taxiMin:40,taxi:75},
- 'Vilassar de Mar':{train:35,taxiMin:42,taxi:80}
+ 'Vilassar de Mar':{train:35,taxiMin:42,taxi:80},
+ 'Caldes d’Estrac':{train:50,taxiMin:50,taxi:95},
+ 'Sant Vicenç de Montalt':{train:52,taxiMin:52,taxi:95},
+ 'Arenys de Mar':{train:55,taxiMin:55,taxi:100}
 };
 const ab=(id,d1,d2)=>`https://www.airbnb.de/rooms/${id}?check_in=${d1}&check_out=${d2}&adults=3`;
 const ST=[
- {n:'Royal Marina Gardens',town:'Castelldefels',beds:'4 Einzelbetten',sz:1,r:4.77,rc:2961,src:'Airbnb',pr:{'29-05':935,'29-06':1085,'30-06':935},u:(d,e)=>ab('859869511773649221',d,e)},
- {n:'3 Zimmer mit Meerblick',town:'Castelldefels',beds:'3 SZ: Doppel, Einzel, Einzel',sz:3,r:4.89,rc:18,src:'Airbnb',pr:{'27-03':1179,'27-04':1330,'28-04':1179,'28-05':1330,'29-05':1179,'29-06':1330,'30-06':1179},u:(d,e)=>ab('1021644018958572938',d,e)},
- {n:'Wohnung am Strand',town:'Castelldefels',beds:'3 SZ: 2 Doppel, 2 Einzel',sz:3,r:4.91,rc:205,src:'Airbnb',pr:{'27-03':1439,'27-04':1464,'28-04':1439,'28-05':1464,'29-05':1464,'29-06':1624,'30-06':1422},u:(d,e)=>ab('13845153',d,e)},
- {n:'Blaue Wohnung',town:'Sitges',beds:'3 SZ, 3 Betten',sz:3,r:4.74,rc:74,src:'Airbnb',pr:{'29-05':790,'29-06':814,'30-06':790},u:(d,e)=>ab('575992486173692077',d,e)},
- {n:'Penthouse zentral',town:'Sitges',beds:'2 SZ: Queen / 2 Einzel',sz:2,r:4.89,rc:279,src:'Airbnb',pr:{'29-05':890,'29-06':1020,'30-06':890},u:(d,e)=>ab('12909242',d,e)},
- {n:'Möblierte Wohnung, 50 m Strand',town:'Sitges',beds:'2 SZ: Queen / Queen + 2 Einzel',sz:2,r:4.94,rc:104,src:'Airbnb',pr:{'30-06':885},u:(d,e)=>ab('14977308',d,e)},
- {n:'Zentral, elegant, 2 Bäder',town:'Sitges',beds:'3 SZ, je 1 Doppelbett',sz:3,r:4.94,rc:140,src:'Airbnb',pr:{'30-06':1181},u:(d,e)=>ab('18823261',d,e)},
- {n:'Charmante Wohnung in Meeresnähe',town:'Vilanova',beds:'3 SZ, je 1 Bett',sz:3,r:4.95,rc:74,src:'Airbnb',pr:{'27-03':1136,'27-04':1259,'28-04':1100,'28-05':1223,'29-05':1064,'29-06':1187,'30-06':1028},u:(d,e)=>ab('1030233955084111098',d,e)},
- {n:'Modern, zentral, 100 m vom Meer',town:'Vilanova',beds:'3 SZ: 2 Doppel, 1 Einzel · 2 Bäder',sz:3,r:5.0,rc:17,src:'Airbnb',pr:{'27-03':1233,'27-04':1383,'28-04':1202,'28-05':1352,'29-05':1171,'29-06':1321,'30-06':1140},u:(d,e)=>ab('1430365461149670289',d,e)},
- {n:'Dachgeschoss mit Dachterrasse',town:'Vilanova',beds:'2 SZ: 2 Einzel / 1 Doppel',sz:2,r:4.89,rc:37,src:'Airbnb',pr:{'27-03':1071,'27-04':1175,'28-04':1175,'28-05':1279,'29-05':1151,'29-06':1259,'30-06':1128},u:(d,e)=>ab('12578762',d,e)},
- {n:'Penthouse mit Terrasse & Pool',town:'Vilanova',beds:'3 SZ · 2 Bäder',sz:3,r:4.98,rc:45,src:'Airbnb',pr:{'27-03':1310,'27-04':1487,'28-04':1310,'28-05':1487,'29-05':1310,'29-06':1487,'30-06':1310},u:(d,e)=>ab('947592370021925444',d,e)},
- {n:'Vilanova Beach Stay',town:'Vilanova',beds:'2 SZ: 2 Einzel, frz. Doppel, Sofa',sz:2,r:4.7,rc:24,disp:'9,4 (24)',src:'Booking',pr:{'27-03':1168,'27-04':1294,'28-04':1076,'28-05':1202,'29-05':1025,'29-06':1151,'30-06':975},u:(d,e)=>`https://www.booking.com/hotel/es/vilanova-beach-stay.de.html?checkin=${d}&checkout=${e}&group_adults=3`},
- {n:'Apartment Ancora',town:'Vilanova',beds:'2 SZ: 2 Einzel / frz. Doppel',sz:2,r:4.6,rc:6,disp:'9,2 (6)',src:'Booking',pr:{'28-04':1224,'28-05':1330,'29-05':1200,'29-06':1309,'30-06':1175},u:(d,e)=>`https://www.booking.com/hotel/es/apartment-ancora-vilanova-i-la-geltru.de.html?checkin=${d}&checkout=${e}&group_adults=3`},
- {n:'Wohnung nahe Meer',town:'Cubelles',beds:'3 SZ: 2 Doppel, 2 Einzel',sz:3,r:4.88,rc:214,src:'Airbnb',pr:{'27-03':755,'27-04':835,'28-04':835,'28-05':931,'29-05':835,'29-06':931,'30-06':821},u:(d,e)=>ab('3189955',d,e)},
- {n:'Altes Navy House',town:'Badalona',beds:'3 SZ: King, Schlafcouch, 2 Einzel',sz:3,r:4.76,rc:135,src:'Airbnb',pr:{'30-06':1049},u:(d,e)=>ab('15318382',d,e)},
- {n:'Mar Loft, 4 Min. zum Bahnhof',town:'Premià de Mar',beds:'1 Raum: Doppel + 2 Einzel',sz:1,r:4.87,rc:63,src:'Airbnb',pr:{'30-06':577},u:(d,e)=>ab('40828903',d,e)},
- {n:'Design-Haus',town:'Vilassar de Mar',beds:'3 SZ: Doppel / Einzel + Etagenbett / Einzel',sz:3,r:4.98,rc:45,src:'Airbnb',pr:{'27-03':923,'27-04':1014,'28-04':923,'28-05':1014,'29-05':923,'29-06':1014,'30-06':1014},u:(d,e)=>ab('16704160',d,e)}
+ {n:"Charmante Wohnung in Meeresnähe",la:41.2175,lo:1.7327,town:"Vilanova",beds:"3 SZ, je 1 Bett",sz:3,r:4.93,rc:75,src:'Airbnb',pr:{"27-03": 1136, "27-04": 1259, "28-04": 1100, "28-05": 1223, "29-05": 1064, "29-06": 1187, "30-06": 1028},u:(d,e)=>ab('1030233955084111098',d,e)},
+ {n:"Modern, zentral, 100 m vom Meer",la:41.2162,lo:1.7249,town:"Vilanova",beds:"3 SZ: 2 Doppel, 1 Einzel · 2 Bäder",sz:3,r:5.0,rc:17,src:'Airbnb',pr:{"27-03": 1233, "27-04": 1383, "28-04": 1202, "28-05": 1352, "29-05": 1171, "29-06": 1321, "30-06": 1140},u:(d,e)=>ab('1430365461149670289',d,e)},
+ {n:"Penthouse mit Terrasse & Pool",la:41.2171,lo:1.7309,town:"Vilanova",beds:"3 SZ · 2 Bäder",sz:3,r:4.98,rc:45,src:'Airbnb',pr:{"27-03": 1310, "27-04": 1487, "28-04": 1310, "28-05": 1487, "29-05": 1310, "29-06": 1487, "30-06": 1310},u:(d,e)=>ab('947592370021925444',d,e)},
+ {n:"Dachgeschoss mit Dachterrasse",la:41.21848,lo:1.73214,town:"Vilanova",beds:"2 SZ: 2 Einzel / 1 Doppel",sz:2,r:4.89,rc:37,src:'Airbnb',pr:{"28-04": 1175, "28-05": 1279, "29-05": 1151, "29-06": 1259, "30-06": 1128},u:(d,e)=>ab('12578762',d,e)},
+ {n:"Wohnung nahe Meer",la:41.2049,lo:1.6772,town:"Cubelles",beds:"3 SZ: 2 Doppel, 2 Einzel",sz:3,r:4.88,rc:214,src:'Airbnb',pr:{"28-04": 835, "28-05": 931, "29-05": 835, "29-06": 931, "30-06": 821},u:(d,e)=>ab('3189955',d,e)},
+ {n:"3 Zimmer mit Meerblick",la:41.2641,lo:1.939,town:"Castelldefels",beds:"3 SZ: Doppel, Einzel, Einzel",sz:3,r:4.89,rc:18,src:'Airbnb',pr:{"27-03": 1179, "27-04": 1330, "28-04": 1179, "28-05": 1330, "29-05": 1179, "29-06": 1330, "30-06": 1179},u:(d,e)=>ab('1021644018958572938',d,e)},
+ {n:"Wohnung am Strand",la:41.26443,lo:1.97058,town:"Castelldefels",beds:"3 SZ: 2 Doppel, 2 Einzel",sz:3,r:4.91,rc:205,src:'Airbnb',pr:{"29-05": 1464, "30-06": 1422},u:(d,e)=>ab('13845153',d,e)},
+ {n:"1. Reihe direkt am Strand",la:41.26505,lo:1.96898,town:"Castelldefels",beds:"2 SZ · 3 Betten",sz:2,r:4.94,rc:235,src:'Airbnb',pr:{"30-06": 1497},u:(d,e)=>ab('19616430',d,e)},
+ {n:"Castell Beach",la:41.2684,lo:1.9716,town:"Castelldefels",beds:"2 SZ · 3 Betten",sz:2,r:4.73,rc:108,src:'Airbnb',pr:{"27-03": 1399, "28-04": 1458, "29-05": 1473},u:(d,e)=>ab('785930509844566866',d,e)},
+ {n:"Lauras Apartments",la:41.26956,lo:1.98094,town:"Castelldefels",beds:"3 Betten (Apartmenthaus)",sz:1,r:4.84,rc:607,src:'Airbnb',pr:{"28-04": 1584, "29-05": 1512, "30-06": 1440},u:(d,e)=>ab('1351392728908016761',d,e)},
+ {n:"Sand, Meer und Sonne",la:41.267,lo:2.011,town:"Gavà",beds:"2 SZ · 4 Betten",sz:2,r:4.9,rc:198,src:'Airbnb',pr:{"27-03": 1289, "27-04": 1442, "28-04": 1267, "28-05": 1420, "29-05": 1244, "29-06": 1397, "30-06": 1222},u:(d,e)=>ab('18984049',d,e)},
+ {n:"1. Meereslinie",la:41.2351,lo:1.8085,town:"Sitges",beds:"2 SZ · 3 Betten",sz:2,r:4.92,rc:79,src:'Airbnb',pr:{"27-03": 945, "27-04": 1080, "28-04": 945, "28-05": 1080, "29-05": 945, "29-06": 1080, "30-06": 945},u:(d,e)=>ab('26519830',d,e)},
+ {n:"Happy Holiday Beach Home",la:41.23776,lo:1.8055,town:"Sitges",beds:"2 SZ · 4 Betten",sz:2,r:4.77,rc:43,src:'Airbnb',pr:{"27-03": 1195, "27-04": 1270, "28-04": 1100, "28-05": 1175, "29-05": 1005, "29-06": 1080, "30-06": 910},u:(d,e)=>ab('32859423',d,e)},
+ {n:"Gaudi Street Apartments",la:41.2374,lo:1.806,town:"Sitges",beds:"3+ Betten (Apartmenthaus)",sz:1,r:4.89,rc:633,src:'Airbnb',pr:{"27-03": 1191, "27-04": 1287, "28-04": 1159, "28-05": 1255, "29-05": 1127, "29-06": 1223, "30-06": 1085},u:(d,e)=>ab('44096938',d,e)},
+ {n:"SIMON Apartment",la:41.2399,lo:1.8117,town:"Sitges",beds:"3 SZ · 3 Betten · 2 Bäder",sz:3,r:4.74,rc:23,src:'Airbnb',pr:{"27-03": 1254, "27-04": 1425, "28-04": 1254, "28-05": 1425, "29-05": 1254},u:(d,e)=>ab('11688545',d,e)},
+ {n:"Haus mit Terrasse",la:41.2379,lo:1.8025,town:"Sitges",beds:"3 SZ · 4 Betten",sz:3,r:4.75,rc:106,src:'Airbnb',pr:{"27-03": 1422, "28-04": 1422, "28-05": 1564, "29-05": 1375, "29-06": 1517, "30-06": 1328},u:(d,e)=>ab('37669808',d,e)},
+ {n:"Helle Wohnung mit Terrasse",la:41.2374,lo:1.8099,town:"Sitges",beds:"2 SZ · 3 Betten · 2 Bäder",sz:2,r:5.0,rc:12,src:'Airbnb',pr:{"27-03": 1330, "27-04": 1510, "28-04": 1330, "28-05": 1510, "29-05": 1330, "29-06": 1510, "30-06": 1330},u:(d,e)=>ab('1617342967335464239',d,e)},
+ {n:"Carmen mit Meerblick",la:41.46733,lo:2.28061,town:"Montgat",beds:"3 SZ · 4 Betten",sz:3,r:4.71,rc:129,src:'Airbnb',pr:{"27-03": 1462, "28-04": 1483, "29-05": 1475, "30-06": 1467},u:(d,e)=>ab('4600058',d,e)},
+ {n:"Atico Beach Masnou",la:41.48168,lo:2.32362,town:"El Masnou",beds:"3 SZ · 5 Betten",sz:3,r:4.77,rc:22,src:'Airbnb',pr:{"28-04": 658, "28-05": 737, "29-05": 658, "29-06": 737},u:(d,e)=>ab('34519597',d,e)},
+ {n:"Terrassa de Mar",la:41.4786,lo:2.3157,town:"El Masnou",beds:"2 SZ · 3 Betten",sz:2,r:4.79,rc:224,src:'Airbnb',pr:{"28-04": 1385, "28-05": 1594, "29-05": 1441, "29-06": 1650, "30-06": 1498},u:(d,e)=>ab('24282643',d,e)},
+ {n:"Wohnung vor dem Strand",la:41.49281,lo:2.36781,town:"Premià de Mar",beds:"2 SZ · 3 Betten",sz:2,r:4.86,rc:100,src:'Airbnb',pr:{"27-03": 1393, "27-04": 1527, "28-04": 1388, "28-05": 1518, "29-05": 1376, "29-06": 1502, "30-06": 1323},u:(d,e)=>ab('13048566',d,e)},
+ {n:"Design-Haus",la:41.50325,lo:2.38898,town:"Vilassar de Mar",beds:"3 SZ: Doppel / Einzel + Etagenbett / Einzel",sz:3,r:4.98,rc:45,src:'Airbnb',pr:{"30-06": 1014},u:(d,e)=>ab('16704160',d,e)},
+ {n:"Apartamento Bonavista",la:41.5033,lo:2.395,town:"Vilassar de Mar",beds:"3 SZ · 4 Betten · 2 Bäder",sz:3,r:4.74,rc:43,src:'Airbnb',pr:{"29-05": 1408, "29-06": 1531, "30-06": 1335},u:(d,e)=>ab('1212263937394966739',d,e)},
+ {n:"Wohnung in Caldes",la:41.57123,lo:2.5278,town:"Caldes d’Estrac",beds:"2 SZ · 3 Betten",sz:2,r:4.84,rc:43,src:'Airbnb',pr:{"27-03": 1049, "27-04": 1156, "28-04": 1006, "28-05": 1113, "29-05": 986, "29-06": 1093, "30-06": 965},u:(d,e)=>ab('1101218327375949528',d,e)},
+ {n:"Glücklicher Aufenthalt",la:41.5671,lo:2.52193,town:"Caldes d’Estrac",beds:"2 SZ: Doppel / Doppel + Einzel",sz:2,r:4.91,rc:98,src:'Airbnb',pr:{"30-06": 975},u:(d,e)=>ab('25794246',d,e)},
+ {n:"Wohnung direkt am Meer",la:41.56641,lo:2.5168,town:"Sant Vicenç de Montalt",beds:"2 SZ · 3 Betten · 2 Bäder",sz:2,r:4.91,rc:117,src:'Airbnb',pr:{"28-05": 1345, "29-06": 1245, "30-06": 1045},u:(d,e)=>ab('51264005',d,e)},
+ {n:"Haus mit Terrasse",la:41.58088,lo:2.55173,town:"Arenys de Mar",beds:"2 SZ · 4 Doppelbetten",sz:2,r:4.96,rc:48,src:'Airbnb',pr:{"28-04": 856, "28-05": 951, "30-06": 808},u:(d,e)=>ab('587323288135460809',d,e)},
+ {n:'Vilanova Beach Stay',la:41.2054,lo:1.6862,town:'Vilanova',beds:'2 SZ: 2 Einzel, frz. Doppel, Sofa',sz:2,r:4.7,rc:24,disp:'9,4 (24)',src:'Booking',pr:{"27-03": 1168, "27-04": 1294, "28-04": 1076, "28-05": 1202, "29-05": 1025, "29-06": 1151, "30-06": 975},u:(d,e)=>`https://www.booking.com/hotel/es/vilanova-beach-stay.de.html?checkin=${d}&checkout=${e}&group_adults=3`},
+ {n:'Apartment Ancora',la:41.21852,lo:1.72857,town:'Vilanova',beds:'2 SZ: 2 Einzel / frz. Doppel',sz:2,r:4.6,rc:6,disp:'9,2 (6)',src:'Booking',pr:{"28-04": 1224, "28-05": 1330, "29-05": 1200, "29-06": 1309, "30-06": 1175},u:(d,e)=>`https://www.booking.com/hotel/es/apartment-ancora-vilanova-i-la-geltru.de.html?checkin=${d}&checkout=${e}&group_adults=3`}
 ];
 
 const DEF={one:true,period:'30-06',time:'all',towns:Object.keys(TW),rooms:false,sort:'pp',taxi:1,bag:0,max:800};
 let S=DEF;
-try{const s=JSON.parse(localStorage.getItem('planer2')||'null');if(s)S={...DEF,...s};if(!PER[S.period])S.period='30-06'}catch(e){}
-const save=()=>{try{localStorage.setItem('planer2',JSON.stringify(S))}catch(e){}};
+try{const s=JSON.parse(localStorage.getItem('planer3')||'null');if(s)S={...DEF,...s};if(!PER[S.period])S.period='30-06'}catch(e){}
+const save=()=>{try{localStorage.setItem('planer3',JSON.stringify(S))}catch(e){}};
 const $=id=>document.getElementById(id);
 const eur=n=>n.toLocaleString('de-DE')+' €';
 
@@ -194,8 +254,9 @@ function render(){
   const minPP=combos.length?Math.min(...combos.map(c=>c.pp)):0;
   $('count').textContent=`${combos.length} Kombinationen`;
   $('best').innerHTML=combos.length?`ab <b>${eur(minPP)}</b> pro Person`:'';
-  const L=$('list');L.innerHTML='';
-  if(!combos.length){L.innerHTML='<div class="empty">Keine Kombination passt zu den Filtern. Wähle mehr Orte aus oder erhöhe das Maximum pro Person.</div>';return}
+  drawMap(combos);
+  const LI=$('list');LI.innerHTML='';
+  if(!combos.length){LI.innerHTML='<div class="empty">Keine Kombination passt zu den Filtern. Wähle mehr Orte aus oder erhöhe das Maximum pro Person.</div>';return}
   combos.forEach((c,i)=>{
     const el=document.createElement('article');el.className='card'+(c.pp===minPP?' top':'');
     const rating=c.s.disp||c.s.r.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' ★ ('+c.s.rc+')';
@@ -216,10 +277,35 @@ function render(){
         <div><div class="pp">${eur(c.pp)}</div><div class="meta">pro Person</div></div>
         <div class="break"><span>Flüge ${eur(c.fl)}</span><span>Wohnung ${eur(c.sp)}</span>${c.taxi?`<span>Taxi ~${eur(c.taxi)}</span>`:''}${c.bag?`<span>Gepäck ${eur(c.bag)}</span>`:''}<span><b>Gesamt ${eur(c.tot)}</b></span></div>
       </div>`;
-    L.appendChild(el);
+    LI.appendChild(el);
   });
 }
-ui();render();
-</script>
 
-</body></html>
+let MAP=null,LAYER=null,tileFail=false;
+function initMap(){
+  if(!window.L){document.getElementById('mapnote').textContent='Die Karte konnte nicht geladen werden.';return}
+  MAP=L.map('map',{scrollWheelZoom:false,zoomControl:true}).setView([41.33,2.0],10);
+  const t=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(MAP);
+  let ok=0;t.on('tileload',()=>ok++);t.on('tileerror',()=>{if(!ok&&!tileFail){tileFail=true;document.getElementById('mapnote').textContent='Hier wird der Kartenhintergrund blockiert; die Punkte stimmen trotzdem. In der GitHub-Version erscheint die vollständige Karte.'}});
+  const poi=(ll,txt)=>L.circleMarker(ll,{radius:5,color:'#6b7280',weight:2,fillColor:'#fff',fillOpacity:1}).bindTooltip(txt,{permanent:true,direction:'right',offset:[6,0]}).addTo(MAP);
+  poi([41.2974,2.0833],'✈ Flughafen BCN');poi([41.3870,2.1701],'Barcelona Zentrum');
+  LAYER=L.layerGroup().addTo(MAP);
+}
+const TC={'Castelldefels':'#c2412d','Gavà':'#d9734e','Sitges':'#2b7a78','Vilanova':'#33415c','Cubelles':'#5b6b8c','Montgat':'#b7791f','El Masnou':'#a3672a','Premià de Mar':'#7a4fa3','Vilassar de Mar':'#9c4f86','Caldes d’Estrac':'#3f7f4f','Sant Vicenç de Montalt':'#5d8f3a','Arenys de Mar':'#2f6b5e'};
+function drawMap(combos){
+  if(!MAP)return; LAYER.clearLayers();
+  const best={};for(const c of combos){if(!best[c.s.n]||c.pp<best[c.s.n].pp)best[c.s.n]=c}
+  const arr=Object.values(best);if(!arr.length)return;
+  const min=Math.min(...arr.map(c=>c.pp));const pts=[];
+  for(const c of arr){const ll=[c.s.la,c.s.lo];pts.push(ll);
+    const m=L.circleMarker(ll,{radius:7,color:'#fff',weight:2,fillColor:TC[c.s.town]||'#333',fillOpacity:1});
+    m.bindTooltip(eur(c.pp),{permanent:true,direction:'top',offset:[0,-8],className:c.pp===min?'best':''});
+    m.bindPopup(`<b>${c.s.n}</b><br>${c.s.town} · ${c.s.beds}<br><span style="font-variant-numeric:tabular-nums">${eur(c.pp)} p. P. · gesamt ${eur(c.tot)}</span><br>${PER[c.f.p][2]}, Flug ${c.f.id} (${c.f.out.split(' ').slice(-1)[0]})<br><a href="${c.url}" target="_blank" rel="noopener">Wohnung ansehen</a> · <a href="${c.f.sky}" target="_blank" rel="noopener">Flug</a>`);
+    m.addTo(LAYER);}
+  pts.push([41.2974,2.0833]);
+  MAP.fitBounds(L.latLngBounds(pts).pad(0.08),{maxZoom:13});
+}
+initMap();ui();render();
+</script>
+</body>
+</html>
